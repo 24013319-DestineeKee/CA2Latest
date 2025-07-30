@@ -41,7 +41,7 @@ app.use(session({
 }));
 app.use(flash());
 
-// --------- Middleware ---------
+// --------- Middleware ---------(Ken)
 function checkAuthenticated(req, res, next) {
   if (req.session.user) return next();
   req.flash('error', 'Please log in first.');
@@ -216,13 +216,18 @@ app.get('/manageHabits', checkAuthenticated, checkAdmin, (req, res) => {
 // Admin: view all goals (Ken)
 app.get('/manageGoals', checkAuthenticated, checkAdmin, (req, res) => {
   const sql = `
-    SELECT g.*, u.username
-    FROM goals g
+    SELECT g.*, u.username 
+    FROM goals g 
     JOIN users u ON g.users_id = u.users_id
+    ORDER BY g.goal_id DESC
   `;
+
   connection.query(sql, (err, results) => {
-    if (err) throw err;
-    res.render('manageGoals', { user: req.session.user, goals: results });
+    if (err) {
+      console.error('Error fetching goals:', err.message);
+      return res.status(500).send('Server error');
+    }
+    res.render('manageGoals', { user: req.user, goals: results });
   });
 });
 
@@ -268,23 +273,6 @@ app.post('/updateRole/:id', checkAuthenticated, checkAdmin, (req, res) => {
   });
 });
 
-//Managegoals (Ken)
-app.get('/manageGoals', checkAuthenticated, checkAdmin, (req, res) => {
-  const sql = `
-    SELECT g.*, u.username 
-    FROM goals g 
-    JOIN users u ON g.users_id = u.users_id
-    ORDER BY g.goal_id DESC
-  `;
-
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error fetching goals:', err.message);
-      return res.status(500).send('Server error');
-    }
-    res.render('manageGoals', { user: req.user, goals: results });
-  });
-});
 
 //deletegoal in managegoal (Admin) (Ken)
 app.post('/deleteGoal/:id', checkAuthenticated, checkAdmin, (req, res) => {
