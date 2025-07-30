@@ -510,8 +510,6 @@ app.post('/editHabit/:id', checkAuthenticated, upload.none(), (req, res) => {
   const { goal_id, name, frequency, targetDate } = req.body;
   console.log("req.body",req.body);
 
-  const safeStart = start_date || null;
-  const safeEnd = end_date || null;
 
   const updateSql = `
     UPDATE habit
@@ -519,7 +517,7 @@ app.post('/editHabit/:id', checkAuthenticated, upload.none(), (req, res) => {
     WHERE habit_id = ?
   `;
 
-  connection.query(updateSql, [goal_id, name, frequency, safeStart, safeEnd, habitId], (error) => {
+  connection.query(updateSql, [goal_id, name, frequency,targetDate, habitId], (error) => {
     if (error) {
       console.error('Error updating habit:', error);
       return res.status(500).send('Failed to update habit');
