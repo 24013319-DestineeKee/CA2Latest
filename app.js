@@ -204,7 +204,7 @@ app.get('/manageHabits', checkAuthenticated, checkAdmin, (req, res) => {
     connection.query(activitySql, (err2, activity) => {
       if (err2) return res.status(500).send('Error loading user activity');
 
-      res.render('manageHabits', {
+      res.render('managehabits', {
         user: req.session.user,
         habits,
         activity
@@ -239,7 +239,7 @@ app.get('/manageUsers', checkAuthenticated, checkAdmin, (req, res) => {
       console.error('Error fetching users:', err);
       return res.status(500).send('Error loading user list');
     }
-    res.render('manageUsers', { user: req.session.user, users: results });
+    res.render('manageusers', { user: req.session.user, users: results });
   });
 });
 
