@@ -72,7 +72,6 @@ function validateRegistration(req, res, next) {
 }
 
 
-
 // --------- Routes ---------
 
 // Home (Ken)
@@ -162,7 +161,6 @@ app.get('/logout', (req, res) => {
 });
 
 
-
 // Admindashboard (Ken)
 app.get('/admindashboard', (req, res) => {
   if (!req.session.user) {
@@ -243,19 +241,6 @@ app.get('/manageUsers', checkAuthenticated, checkAdmin, (req, res) => {
   });
 });
 
-//deleteuser (Only admin can) (Ken)
-app.post('/deleteUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
-  const userId = req.params.id;
-
-  const sql = 'DELETE FROM users WHERE users_id = ? AND role != "admin"';
-  connection.query(sql, [userId], (err) => {
-    if (err) {
-      console.error('Error deleting user:', err);
-      return res.status(500).send('Failed to delete user');
-    }
-    res.redirect('/manageUsers');
-  });
-});
 
 //update role (admin only) (Ken)
 app.post('/updateRole/:id', checkAuthenticated, checkAdmin, (req, res) => {
@@ -274,7 +259,9 @@ app.post('/updateRole/:id', checkAuthenticated, checkAdmin, (req, res) => {
 });
 
 
-//deletegoal in managegoal (Admin) (Ken)
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//deletegoal in managegoal (Admin)
 app.post('/deleteGoal/:id', checkAuthenticated, checkAdmin, (req, res) => {
   const goalId = req.params.id;
   const sql = 'DELETE FROM goals WHERE goal_id = ?';
@@ -290,6 +277,19 @@ app.post('/deleteGoal/:id', checkAuthenticated, checkAdmin, (req, res) => {
 
 
 
+//deleteuser (Only admin can) 
+app.post('/deleteUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
+  const userId = req.params.id;
+
+  const sql = 'DELETE FROM users WHERE users_id = ? AND role != "admin"';
+  connection.query(sql, [userId], (err) => {
+    if (err) {
+      console.error('Error deleting user:', err);
+      return res.status(500).send('Failed to delete user');
+    }
+    res.redirect('/manageUsers');
+  });
+});
 
 
 // --------- GOALS ---------
