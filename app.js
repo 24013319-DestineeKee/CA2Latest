@@ -227,7 +227,7 @@ app.get('/manageGoals', checkAuthenticated, checkAdmin, (req, res) => {
       console.error('Error fetching goals:', err.message);
       return res.status(500).send('Server error');
     }
-    res.render('manageGoals', { user: req.user, goals: results });
+    res.render('manageGoals', { user: req.session.user, goals: results });
   });
 });
 
